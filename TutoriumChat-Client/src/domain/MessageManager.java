@@ -19,8 +19,7 @@ public class MessageManager {
 	public MessageManager(String name) {
 		// Socket Verbindung herstellen
 
-		this.client = new Client(this);
-		new Thread(this.client).start();
+		this.connect();
 
 		messages = new Vector<ChatMessage>();
 		this.chatGui = new Gui(this);
@@ -36,6 +35,12 @@ public class MessageManager {
 		temp.setAuthor(this.name);
 		temp.setMessage(message);
 		this.client.pushMessage(temp);
+	}
+	
+	public void connect(){
+		this.client = new Client(this);
+		new Thread(this.client).start();
+		
 	}
 
 }

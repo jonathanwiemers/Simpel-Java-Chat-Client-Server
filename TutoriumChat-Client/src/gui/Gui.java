@@ -135,10 +135,9 @@ public class Gui extends JFrame {
 			 */
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if (e.getExtendedKeyCode() == 10) {
+				if (e.getExtendedKeyCode() == KeyEvent.VK_ENTER) {
 					sendButton.doClick();
 				}
-
 			}
 		});
 

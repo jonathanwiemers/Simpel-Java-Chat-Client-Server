@@ -33,8 +33,9 @@ public class Client implements ChatClientInterface, Runnable {
 
 	public void connect() {
 		try {
-			this.socket = new Socket("feijnox.no-ip.org", 1337);
-			this.sInput = new ObjectInputStream(this.socket.getInputStream());
+			this.socket = new Socket("127.0.0.1", 1337);
+			
+			this.sInput = new ObjectInputStream(this.socket.getInputStream());			
 			this.sOutput = new ObjectOutputStream(this.socket.getOutputStream());
 		} catch (IOException e) {
 			this.closeConnection();
@@ -60,8 +61,11 @@ public class Client implements ChatClientInterface, Runnable {
 		
 		switch(selected){
 		case 0: System.exit(-1);
-		case 1: this.connect();
+				break;
+		case 1: this.mgr.connect();	
+			
 		}
+		
 
 	}
 
@@ -84,6 +88,7 @@ public class Client implements ChatClientInterface, Runnable {
 	public void run() {
 		ChatMessage cm;
 		while (this.isRunning) {
+			System.out.println("waiting for messages");
 			try {
 				/*
 				 * Da nichts anderes außer ChatMessages übertragen werden, kann

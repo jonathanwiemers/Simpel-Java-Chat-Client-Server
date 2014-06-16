@@ -32,7 +32,6 @@ public class ChatServer implements Runnable {
 				 System.out.println("Server waiting for Clients on port " + this.port + ".");
 				 Socket socket = serverSocket.accept();   
 				 System.out.println("New Client");
-				 this.generateRandomColor();
 				 this.clients.add(new ClientThread(socket,this.generateRandomColor(),this));  	 
 			 }
 		 } catch (Exception e){
