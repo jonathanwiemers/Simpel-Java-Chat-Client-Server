@@ -20,6 +20,6 @@ public interface ChatServerInterface {
 
 	public List<ChatClientInterface> getSessions();
 	
-	public void pushMessage(ChatMessage m);
+	public void broadcastMessage(ChatMessage m);
 	
 }
