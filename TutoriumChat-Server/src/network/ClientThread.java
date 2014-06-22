@@ -9,7 +9,9 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import value.ChatMessage;
+import de.root1.simon.annotation.SimonRemote;
 
+@SimonRemote(value = {ChatClientInterface.class})
 public class ClientThread implements Runnable, ChatClientInterface{
 	
 	private ObjectInputStream sInput; // to read from the socket
@@ -61,7 +63,7 @@ public class ClientThread implements Runnable, ChatClientInterface{
 		while(this.isRunning){
 			try {
 				/*
-				 * Da nichts anderes außer ChatMessages übertragen werden, kann hier gleich gecastet werden
+				 * Da nichts anderes auï¿½er ChatMessages ï¿½bertragen werden, kann hier gleich gecastet werden
 				 */
 				this.onMessage((ChatMessage)this.sInput.readObject());
 			} catch (ClassNotFoundException | IOException e) {	
@@ -84,6 +86,12 @@ public class ClientThread implements Runnable, ChatClientInterface{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void setColor(Color color) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

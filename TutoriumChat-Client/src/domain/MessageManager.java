@@ -2,21 +2,24 @@ package domain;
 
 import gui.Gui;
 
-import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Vector;
 
+import de.root1.simon.exceptions.EstablishConnectionFailed;
+import de.root1.simon.exceptions.LookupFailedException;
 import network.Client;
 import value.ChatMessage;
 
 public class MessageManager {
+	
+	
 	private List<ChatMessage> messages;
 	private Gui chatGui;
 	private String name;
 	private Client client;
 
-	public MessageManager(String name) {
+	public MessageManager(String name) throws UnknownHostException, LookupFailedException, EstablishConnectionFailed {
 		// Socket Verbindung herstellen
 
 		this.client = new Client(this);
@@ -35,6 +38,7 @@ public class MessageManager {
 		ChatMessage temp = new ChatMessage();
 		temp.setAuthor(this.name);
 		temp.setMessage(message);
+		temp.setColor(client.getColor());
 		this.client.pushMessage(temp);
 	}
 

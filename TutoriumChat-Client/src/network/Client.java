@@ -1,7 +1,9 @@
 package network;
 
 import interfaces.ChatClientInterface;
+import interfaces.ChatServerInterface;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -11,6 +13,12 @@ import java.net.UnknownHostException;
 import javax.swing.JOptionPane;
 
 import value.ChatMessage;
+import value.Constants;
+import de.root1.simon.Lookup;
+import de.root1.simon.Simon;
+import de.root1.simon.annotation.SimonRemote;
+import de.root1.simon.exceptions.EstablishConnectionFailed;
+import de.root1.simon.exceptions.LookupFailedException;
 import domain.MessageManager;
 
 /**
@@ -19,59 +27,71 @@ import domain.MessageManager;
  * @author Jonathan
  * 
  */
+@SimonRemote(value = { ChatClientInterface.class })
 public class Client implements ChatClientInterface, Runnable {
+	
+	/** wird fï¿½ï¿½r Netzwerkverbindung ï¿½ï¿½ber Simon benï¿½ï¿½tigt */
+	private Lookup lookup;
+	
+	private String ip;
+	
 	private MessageManager mgr;
 	private ObjectInputStream sInput;
 	private ObjectOutputStream sOutput;
 	private Socket socket;
 	private boolean isRunning = true;
+	
+	private Color color;
+	
+	private ChatServerInterface server;
+	
 
-	public Client(MessageManager mgr) {
-		this.mgr = mgr;
-		this.connect();
-	}
-
-	public void connect() {
-		try {
-			this.socket = new Socket("feijnox.no-ip.org", 1337);
-			this.sInput = new ObjectInputStream(this.socket.getInputStream());
-			this.sOutput = new ObjectOutputStream(this.socket.getOutputStream());
-		} catch (IOException e) {
-			this.closeConnection();
-			e.printStackTrace();
-		}
-
-		System.err.println("Socket Verbindung");
-	}
-
-	public void closeConnection() {
-		try {
-			this.socket.close();
-			this.isRunning = false;
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		Object[] options = { "Shutdown", "Reconnect" };
-		int selected = JOptionPane.showOptionDialog(null,
-				"Treffen Sie eine Auswahl", "Alternativen",
-				JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
-				null, options, options[0]);
+	public Client(MessageManager mgr) throws UnknownHostException, LookupFailedException, EstablishConnectionFailed {
 		
-		switch(selected){
-		case 0: System.exit(-1);
-		case 1: this.connect();
-		}
-
+		// Standard IP
+		ip = "127.0.0.1";
+		
+		this.mgr = mgr;
+		
+		// Nach IP des Servers fragen
+		ip = (String) JOptionPane.showInputDialog(null,
+						"Bitte gib die Server-IP ein.", "Verbindung zum Server",
+						JOptionPane.QUESTION_MESSAGE, null, null, ip);
+		// mit Server verbinden
+		this.connectToServer(ip);
+		
+	}
+	
+	/**
+	 * Methode sucht unter der angegebenen IP-Adresse und zugehï¿½ï¿½rigem Port 
+	 * nach einem aktiven Server. Wird ein Server gefunden findet ein login statt
+	 * @param ip - String - IP Adresse des Servers
+	 * @throws UnknownHostException
+	 * @throws LookupFailedException
+	 * @throws EstablishConnectionFailed
+	 */
+	public void connectToServer(String ip) throws UnknownHostException,
+		LookupFailedException, EstablishConnectionFailed {
+		
+		// Lookup fï¿½ï¿½r den Server einrichten (Host-IP, Port des Servers)
+		lookup = Simon.createNameLookup(ip, Constants.STANDARD_PORT);
+		
+		// Server-Objekt aufsuchen
+		ChatServerInterface server = (ChatServerInterface) lookup
+				.lookup(Constants.SERVER_NAME);
+		
+		// Client auf dem Server anmelden
+	    server.login(this);
+			
+	    // Server-Interface lokal hinterlegen
+		this.server = server;
+		
 	}
 
-	@Override
+	
+
 	public void pushMessage(ChatMessage m) {
-		try {
-			this.sOutput.writeObject(m);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.server.pushMessage(m);
 	}
 
 	@Override
@@ -82,18 +102,14 @@ public class Client implements ChatClientInterface, Runnable {
 
 	@Override
 	public void run() {
-		ChatMessage cm;
-		while (this.isRunning) {
-			try {
-				/*
-				 * Da nichts anderes außer ChatMessages übertragen werden, kann
-				 * hier gleich gecastet werden
-				 */
-				this.onMessage((ChatMessage) this.sInput.readObject());
-			} catch (ClassNotFoundException | IOException e) {
-				System.err.println("Lost Connection");
-				this.closeConnection();
-			}
-		}
+	
+	}
+	
+	public Color getColor() {
+		return color;
+	}
+	public void setColor(Color color) {
+		this.color = color;
+		
 	}
 }
