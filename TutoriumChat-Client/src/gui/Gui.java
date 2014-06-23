@@ -52,6 +52,8 @@ public class Gui extends JFrame {
             }
         };
         
+        
+        
         this.addWindowListener(exitListener);
 		
 		this.setSize(w, h);

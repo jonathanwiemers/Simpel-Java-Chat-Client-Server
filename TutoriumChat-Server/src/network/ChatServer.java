@@ -48,11 +48,6 @@ public class ChatServer implements ChatServerInterface, Serializable, Runnable {
 	
 	
 	
-	
-	public synchronized void broadcast(ChatMessage m){
-		
-	}
-	
 	/**
 	 * Generiert eine Random Color
 	 * @return

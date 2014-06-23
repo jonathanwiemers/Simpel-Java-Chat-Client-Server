@@ -31,11 +31,6 @@ public class Client implements ChatClientInterface, Runnable {
 	private String ip;
 	
 	private MessageManager mgr;
-	private ObjectInputStream sInput;
-	private ObjectOutputStream sOutput;
-	private Socket socket;
-	private boolean isRunning = true;
-	
 	private Color color;
 	
 	private ChatServerInterface server;
