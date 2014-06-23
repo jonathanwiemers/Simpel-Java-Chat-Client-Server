@@ -41,5 +41,9 @@ public class MessageManager {
 		temp.setColor(client.getColor());
 		this.client.pushMessage(temp);
 	}
+	
+	public void logout(){
+		this.client.logout();
+	}
 
 }

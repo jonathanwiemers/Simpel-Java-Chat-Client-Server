@@ -107,4 +107,9 @@ public class Client implements ChatClientInterface, Runnable {
 		this.color = color;
 		
 	}
+
+	public void logout() {
+		this.server.removeSession(this);
+		
+	}
 }
