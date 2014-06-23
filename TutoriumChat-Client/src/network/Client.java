@@ -21,12 +21,7 @@ import de.root1.simon.exceptions.EstablishConnectionFailed;
 import de.root1.simon.exceptions.LookupFailedException;
 import domain.MessageManager;
 
-/**
- * socket Verbindung
- * 
- * @author Jonathan
- * 
- */
+
 @SimonRemote(value = { ChatClientInterface.class })
 public class Client implements ChatClientInterface, Runnable {
 	
