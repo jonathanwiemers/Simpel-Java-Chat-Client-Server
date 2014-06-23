@@ -86,7 +86,7 @@ public class Client implements ChatClientInterface, Runnable {
 	
 
 	public void pushMessage(ChatMessage m) {
-		this.server.pushMessage(m);
+		this.server.broadcastMessage(m);
 	}
 
 	@Override

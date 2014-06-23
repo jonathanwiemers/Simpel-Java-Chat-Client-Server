@@ -50,10 +50,7 @@ public class ChatServer implements ChatServerInterface, Serializable, Runnable {
 	
 	
 	public synchronized void broadcast(ChatMessage m){
-		System.out.println("neue Nachricht");
-		for(ChatClientInterface client: this.clients){
-			client.onMessage(m);
-		}
+		
 	}
 	
 	/**
@@ -145,9 +142,11 @@ public class ChatServer implements ChatServerInterface, Serializable, Runnable {
 
 
 	@Override
-	public void pushMessage(ChatMessage m) {
-		this.broadcast(m);
-		
+	public synchronized void broadcastMessage(ChatMessage m) {
+		System.out.println("neue Nachricht");
+		for(ChatClientInterface client: this.clients){
+			client.onMessage(m);
+		}
 	}
 	
 	
